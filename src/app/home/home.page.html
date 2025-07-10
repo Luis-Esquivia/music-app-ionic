@@ -1,17 +1,35 @@
 <ion-header>
   <ion-toolbar>
     <ion-title> Home </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="cambiarColor()"> Colors cards </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <swiper-container pagination="true" loop="true" slides-pre-view="1">
+<ion-content [style.--background]="colorFondo">
+  <swiper-container loop="true" slides-per-view="1">
     <swiper-slide *ngFor="let genre of genres">
       <div class="slide-content">
-        <h2>{{ genre.title }}</h2>
+        <h2 [style.color]="colorTitulo">{{ genre.title }}</h2>
         <img [src]="genre.image" [alt]="genre.title" />
-        <p>{{ genre.description }}</p>
+        <p [style.color]="colorTexto">{{ genre.description }}</p>
       </div>
     </swiper-slide>
   </swiper-container>
+
+  <!--   <ion-card [style.background-color]="colorCard" [style.color]="colorTexto">
+    <ion-card-header>
+      <ion-card-title [style.color]="colorTitulo">Card Title</ion-card-title>
+      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      Here's a small text description for the card content.
+    </ion-card-content>
+  </ion-card> -->
+
+  <ion-button expand="full" class="tema-btn" (click)="cambiarColor()">
+    Cambiar de tema
+  </ion-button>
 </ion-content>

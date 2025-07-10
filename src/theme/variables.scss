@@ -1,2 +1,22 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+:root {
+  --color-light-bg-ioncontent: #f2f3f4;
+  --color-dark-bg-ioncontent: #151515;
+
+  --color-light-text-card: #1b1b1b;
+  --color-dark-text-card: #eeedeb;
+
+  --color-light-title-card: #03e107;
+  --color-dark-title-card: #7ffe00;
+
+  --color-boton-tema: #7ffe00;
+
+  --color-claro: #f5c476;
+  --color-oscuro: #ff9d00;
+
+  --color-claro: #f5c476;
+  --color-oscuro: #ff9d00;
+  --espaciado-base: 1rem;
+  --espaciado-grande: 2rem;
+}

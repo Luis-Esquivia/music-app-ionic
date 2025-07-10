@@ -11,7 +11,15 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomePage {
+  temaOscuro = true;
+
+  colorFondo = 'var(--color-dark-bg-ioncontent)';
+  colorTexto = 'var(--color-dark-text-card)';
+  colorTitulo = 'var(--color-dark-title-card)';
+  colorCard = 'var(--color-oscuro)';
+
   //[Tarea]: Agregar infromacion de minimo 3 slides para mostrar en la vista
+  //[Tarea]: Cambiar mediante el click de un boton el tema (color) de los slides
   genres = [
     {
       title: 'Música Clásica',
@@ -37,4 +45,24 @@ export class HomePage {
   ];
 
   constructor() {}
+
+  cambiarColor() {
+    this.temaOscuro = !this.temaOscuro;
+    //if ternarios
+    this.colorFondo = this.temaOscuro
+      ? 'var(--color-dark-bg-ioncontent)'
+      : 'var(--color-light-bg-ioncontent)';
+
+    this.colorTexto = this.temaOscuro
+      ? 'var(--color-dark-text-card)'
+      : 'var(--color-light-text-card)';
+
+    this.colorTitulo = this.temaOscuro
+      ? 'var(--color-dark-title-card)'
+      : 'var(--color-light-title-card)';
+
+    this.colorCard = this.temaOscuro
+      ? 'var(--color-oscuro)'
+      : 'var(--color-claro)';
+  }
 }
