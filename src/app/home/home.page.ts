@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { StorageService } from '../service/storage.service';
 
 @Component({
   selector: 'app-home',
@@ -10,13 +11,18 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   imports: [IonicModule, CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomePage {
+export class HomePage implements OnInit{
   temaOscuro = true;
 
   colorFondo = 'var(--color-dark-bg-ioncontent)';
   colorTexto = 'var(--color-dark-text-card)';
   colorTitulo = 'var(--color-dark-title-card)';
   colorCard = 'var(--color-oscuro)';
+  colorOscuro = 'var(--color-dark-title-card)';
+  colorClaro = 'var(--color-dark-bg-ioncontent)'
+  colorVerde = 'var(--color-dark-title-card)';
+
+  colorActual = this.colorOscuro;
 
   //[Tarea]: Agregar infromacion de minimo 3 slides para mostrar en la vista
   //[Tarea]: Cambiar mediante el click de un boton el tema (color) de los slides
@@ -44,7 +50,19 @@ export class HomePage {
     },
   ];
 
-  constructor() {}
+  constructor(private storageService: StorageService) {}
+
+  async ngOnInit() {
+    await this.loadStorageData();
+    console.log("Hola")
+  }
+
+  async cambiarColorDos () {
+    this.colorActual = this.colorActual === this.colorOscuro ? this.colorClaro : this.colorOscuro;
+    console.log(this.colorActual)
+    await this.storageService.set('theme', this.colorActual)
+    console.log('Tema Guardado: ', this.colorActual)
+  }
 
   cambiarColor() {
     this.temaOscuro = !this.temaOscuro;
@@ -65,4 +83,15 @@ export class HomePage {
       ? 'var(--color-oscuro)'
       : 'var(--color-claro)';
   }
+
+  async loadStorageData() {
+    const saveTheme = await this.storageService.get('theme');
+    if (saveTheme) {
+      this.colorActual = saveTheme;
+      console.log('color: ', this.colorActual)
+    }
+  }
+
+  //Crear funcion para ir a ver la intro, se va a conectar con un boton 
+  // que debemos agregar en el html y  al hacer click ejecute esat funcion para llevarme a ver la intro
 }

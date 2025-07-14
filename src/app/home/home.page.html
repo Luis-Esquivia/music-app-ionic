@@ -10,7 +10,7 @@
 
 <ion-content [style.--background]="colorFondo">
   <swiper-container loop="true" slides-per-view="1">
-    <swiper-slide *ngFor="let genre of genres">
+    <swiper-slide *ngFor="let genre of genres" [style.background-color]="colorFondo">
       <div class="slide-content">
         <h2 [style.color]="colorTitulo">{{ genre.title }}</h2>
         <img [src]="genre.image" [alt]="genre.title" />
@@ -29,7 +29,15 @@
     </ion-card-content>
   </ion-card> -->
 
-  <ion-button expand="full" class="tema-btn" (click)="cambiarColor()">
+  <ion-button expand="full" class="tema-btn" (click)="cambiarColorDos()">
     Cambiar de tema
   </ion-button>
+
+<!--   Demo de storage -->
+   <div>
+    <h3>Demo Ionic Storage</h3>
+    <div [style.background-color]="colorActual" >
+      <p>Tema Actual: {{ colorActual === colorOscuro ? 'Oscuro' : 'Claro'  }}</p>
+    </div>
+   </div>
 </ion-content>
