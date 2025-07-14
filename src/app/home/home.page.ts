@@ -54,7 +54,7 @@ export class HomePage implements OnInit{
 
   async ngOnInit() {
     await this.loadStorageData();
-    console.log("Hola")
+      this.simularCargaDatos();
   }
 
   async cambiarColorDos () {
@@ -92,6 +92,20 @@ export class HomePage implements OnInit{
     }
   }
 
-  //Crear funcion para ir a ver la intro, se va a conectar con un boton 
+  async simularCargaDatos() {
+    const data = await this.obtenerDatosSimulados();
+    console.log('Datos simulados: ', data)
+  }
+
+  obtenerDatosSimulados() {
+    return new Promise((resolver, reject) => {
+      setTimeout(() => {
+       // resolver(['Rock', 'Poop', 'Jazz'])
+       reject("Hubo un error al obtener los datos")
+      }, 1500)
+    })
+  }
+
+  //Crear funcion para ir a ver la intro, se va a conectar con un boton
   // que debemos agregar en el html y  al hacer click ejecute esat funcion para llevarme a ver la intro
 }
