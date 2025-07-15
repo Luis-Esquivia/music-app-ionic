@@ -3,6 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { StorageService } from '../service/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -50,11 +51,17 @@ export class HomePage implements OnInit{
     },
   ];
 
-  constructor(private storageService: StorageService) {}
+  constructor(private router: Router, private storageService: StorageService) {}
 
   async ngOnInit() {
+    const introVisto = await this.storageService.get('VioElIntro');
+    if (!introVisto) {
+      this.router.navigateByUrl('/intro');
+      return;
+    }
+
     await this.loadStorageData();
-      this.simularCargaDatos();
+    this.simularCargaDatos();
   }
 
   async cambiarColorDos () {
