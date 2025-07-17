@@ -19,4 +19,22 @@ export class AuthService {
       )
     })
   }
+
+  registerUser(user: any) {
+    return new Promise((accept, reject) => {
+      if (
+        user?.nombre?.trim() &&
+        user?.apellido?.trim() &&
+        user?.email?.trim() &&
+        user?.password?.trim()
+      ) {
+        accept("registro correcto");
+      } else {
+        reject("Todos los campos son requeridos.");
+      }
+    });
+  }
+
+
+
 }

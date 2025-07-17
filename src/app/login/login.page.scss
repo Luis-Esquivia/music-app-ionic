@@ -80,3 +80,17 @@
 .login-header--img {
   width: 100px;
 }
+
+.skip-link {
+  text-decoration: none;
+  color: blue;
+  cursor: pointer;
+}
+
+.go-login {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+

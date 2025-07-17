@@ -11,6 +11,7 @@ import {
 import { IonicModule, NavController } from '@ionic/angular';
 import { AuthService } from '../service/auth.service';
 import { StorageService } from '../service/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginPage implements OnInit {
   titleColor = 'var(--title-color)';
   loginForm: FormGroup;
   errorMenssage: string = "";
+  colorNegro = 'var(--color-negro)';
 
   validation_messages = {
     email: [
@@ -46,7 +48,7 @@ export class LoginPage implements OnInit {
     ]
   }
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService) {
+  constructor(private router: Router, private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl(
         '', Validators.compose([
@@ -77,5 +79,9 @@ export class LoginPage implements OnInit {
     }).catch(error => {
       this.errorMenssage = error;
     });
+  }
+
+  goRegister() {
+    this.router.navigateByUrl("/register")
   }
 }

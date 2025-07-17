@@ -66,6 +66,10 @@
       >
         Login
       </ion-button>
+      <ion-row class="ion-justify-content-center ion-padding go-login">
+        <p class="ion-no-margin go-login--text" [style.color]="colorNegro" >¿No tienes una cuenta?</p>
+        <a class="skip-link" (click)="goRegister()">Registrate</a>
+      </ion-row>
     </form>
     {{ errorMenssage }}
   </div>
