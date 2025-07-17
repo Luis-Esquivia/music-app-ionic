@@ -8,7 +8,9 @@ import {
   Validators,
   FormControl,
 } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
+import { AuthService } from '../service/auth.service';
+import { StorageService } from '../service/storage.service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +25,7 @@ export class LoginPage implements OnInit {
   borderRadius = 'var(--input-border-radius)';
   titleColor = 'var(--title-color)';
   loginForm: FormGroup;
+  errorMenssage: string = "";
 
   validation_messages = {
     email: [
@@ -43,7 +46,7 @@ export class LoginPage implements OnInit {
     ]
   }
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl(
         '', Validators.compose([
@@ -63,5 +66,16 @@ export class LoginPage implements OnInit {
 
   loginUser(credentials: any) {
     console.log(credentials);
+    this.authService.loginUser(credentials).then(res => {
+      this.errorMenssage = "";
+      try {
+        this.storageService.set('login', true);
+      } catch (error) {
+        console.error('Error guardando en el storage:', error);
+      }
+      this.navCtrl.navigateForward("/home");
+    }).catch(error => {
+      this.errorMenssage = error;
+    });
   }
 }

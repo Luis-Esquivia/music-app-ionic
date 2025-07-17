@@ -54,14 +54,17 @@ export class HomePage implements OnInit{
   constructor(private router: Router, private storageService: StorageService) {}
 
   async ngOnInit() {
-    const introVisto = await this.storageService.get('VioElIntro');
+    /* const introVisto = await this.storageService.get('VioElIntro');
     if (!introVisto) {
       this.router.navigateByUrl('/intro');
       return;
-    }
+    } */
+
+      const validateIntro = (await this.storageService.get('validateIntro')) === null ? false : true;
+      console.log("ya entre al intro ? ",validateIntro)
 
     await this.loadStorageData();
-    this.simularCargaDatos();
+ /*    this.simularCargaDatos(); */
   }
 
   async cambiarColorDos () {

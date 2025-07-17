@@ -1,14 +1,22 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, GuardResult, MaybeAsync, Router, RouterStateSnapshot } from '@angular/router';
+import { StorageService } from '../service/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
+
 export class IntroGuard implements CanActivate {
-  canActivate() {
-    //Obtener del storaje si ya vi la intro y dependiendo del resultado dejar pasar o no hacia el home
-    //en caso false(osea, no vi la intro aun) redireccionar con angular roouter hacia la intro nuevamente
-    return true
+
+  constructor(private storageService: StorageService,private router: Router) {}
+
+  async canActivate(): Promise<boolean> {
+    const validateIntro = (await this.storageService.get('validateIntro')) === null ? false : true;
+    if (!validateIntro) {
+      this.router.navigate(['/intro']);
+    }
+
+    return validateIntro
   }
 }

@@ -20,8 +20,6 @@ export class IntroPage implements OnInit {
   titleColor = 'var(--title-color)';
   textColor = 'var(--text-color)';
 
-  responseOk = 'si lo vio';
-
   introSliders = [
     {
       title: 'Find Best Musicians All Around Your City',
@@ -46,7 +44,6 @@ export class IntroPage implements OnInit {
   }
 
   goBack() {
-    console.log('volver')
     this.router.navigateByUrl("/home")
     //al volver atras o volver al home guardar en el storage que ya estuve o vi la pagina de intro
   }
@@ -54,7 +51,7 @@ export class IntroPage implements OnInit {
 
   async goHome() {
     try {
-      await this.storageService.set('VioElIntro', this.responseOk);
+      await this.storageService.set('validateIntro', true);
       console.log('Intro marcada como vista');
       this.router.navigateByUrl('/home');
     } catch (error) {
