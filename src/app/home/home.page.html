@@ -1,13 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-title> Home </ion-title>
-
     <ion-buttons slot="end">
-      <ion-button (click)="cambiarColor()"> Colors cards </ion-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
+ <ion-buttons slot="end">
+      <ion-button (click)="cambiarColor()"> Colors cards </ion-button>
+    </ion-buttons>
 <ion-content [style.--background]="colorFondo">
   <swiper-container loop="true" slides-per-view="1">
     <swiper-slide *ngFor="let genre of genres" [style.background-color]="colorFondo">
