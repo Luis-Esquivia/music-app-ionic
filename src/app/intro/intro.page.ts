@@ -53,7 +53,7 @@ export class IntroPage implements OnInit {
     try {
       await this.storageService.set('validateIntro', true);
       console.log('Intro marcada como vista');
-      this.router.navigateByUrl('/home');
+      this.router.navigateByUrl('/menu/home');
     } catch (error) {
       console.error('Error guardando en el storage:', error);
     }

@@ -75,7 +75,7 @@ export class LoginPage implements OnInit {
       } catch (error) {
         console.error('Error guardando en el storage:', error);
       }
-      this.navCtrl.navigateForward("/home");
+      this.navCtrl.navigateForward("/menu/home");
     }).catch(error => {
       this.errorMenssage = error;
     });

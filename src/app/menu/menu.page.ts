@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, MenuController, NavController } from '@ionic/angular';
+import { StorageService } from '../service/storage.service';
 
 @Component({
   selector: 'app-menu',
@@ -13,12 +14,22 @@ import { IonicModule } from '@ionic/angular';
 })
 export class MenuPage implements OnInit {
 
-  constructor() {}
+  constructor(private menu: MenuController, private storageService: StorageService, private navCtrl: NavController) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
+  async logOut() {
+    await this.storageService.clear();
+    this.navCtrl.navigateRoot('/login');
+  }
 
   goIntro() {
     console.log("Ir hacia la intro")
+  }
+
+  closeMenu() {
+    this.menu.close();
   }
 }
 
