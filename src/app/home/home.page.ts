@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { StorageService } from '../service/storage.service';
 import { Router } from '@angular/router';
+import { MusicService } from '../service/music.service';
 
 @Component({
   selector: 'app-home',
@@ -51,7 +52,10 @@ export class HomePage implements OnInit{
     },
   ];
 
-  constructor(private router: Router, private storageService: StorageService) {}
+  tracks: any;
+  albums: any;
+
+  constructor(private router: Router, private storageService: StorageService, private musicService: MusicService) {}
 
   async ngOnInit() {
     /* const introVisto = await this.storageService.get('VioElIntro');
@@ -65,6 +69,22 @@ export class HomePage implements OnInit{
 
     await this.loadStorageData();
  /*    this.simularCargaDatos(); */
+    this.loadTracks();
+    this.loadAlbums();
+  }
+
+  loadTracks() {
+    this.musicService.getTracks().then(tracks => {
+      this.tracks = tracks;
+      console.log(this.tracks, "Las Canciones")
+    })
+  }
+
+  loadAlbums() {
+    this.musicService.getAlbums().then(albums => {
+      this.albums = albums;
+      console.log(this.albums, "Las Albums")
+    })
   }
 
   async cambiarColorDos () {

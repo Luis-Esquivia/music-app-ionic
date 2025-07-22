@@ -1,52 +1,24 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title> Home </ion-title>
     <ion-buttons slot="end">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-title>Home</ion-title>
   </ion-toolbar>
 </ion-header>
- <ion-buttons slot="end">
-      <ion-button (click)="cambiarColor()"> Colors cards </ion-button>
-    </ion-buttons>
-<ion-content [style.--background]="colorFondo">
-  <swiper-container loop="true" slides-per-view="1">
-    <swiper-slide *ngFor="let genre of genres" [style.background-color]="colorFondo">
+
+<ion-content>
+  <swiper-container
+    pagination="true"
+    loop="true"
+    slides-per-view="2">
+
+    <swiper-slide *ngFor="let album of albums">
       <div class="slide-content">
-        <h2 [style.color]="colorTitulo">{{ genre.title }}</h2>
-        <img [src]="genre.image" [alt]="genre.title" />
-        <p [style.color]="colorTexto">{{ genre.description }}</p>
+        <img [src]="album.image">
+        <p>{{ album.name }}</p>
       </div>
     </swiper-slide>
+
   </swiper-container>
-
-  <!--   <ion-card [style.background-color]="colorCard" [style.color]="colorTexto">
-    <ion-card-header>
-      <ion-card-title [style.color]="colorTitulo">Card Title</ion-card-title>
-      <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
-    </ion-card-header>
-    <ion-card-content>
-      Here's a small text description for the card content.
-    </ion-card-content>
-  </ion-card> -->
-
-  <ion-button expand="full" class="tema-btn" (click)="cambiarColorDos()">
-    Cambiar de tema
-  </ion-button>
-
-<!--   Demo de storage -->
-   <div>
-    <h3>Demo Ionic Storage</h3>
-    <div [style.background-color]="colorActual" >
-      <p>Tema Actual: {{ colorActual === colorOscuro ? 'Oscuro' : 'Claro'  }}</p>
-    </div>
-   </div>
-
-   <div>
-    <p class="ion-text-center">Texto centrado</p>
-    <p class="ion-text-left">Texto izquierda</p>
-    <p class="ion-text-">Texxtot derecho</p>
-   </div>
-
-
 </ion-content>
