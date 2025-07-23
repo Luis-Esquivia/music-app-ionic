@@ -54,6 +54,7 @@ export class HomePage implements OnInit{
 
   tracks: any;
   albums: any;
+  localArtists: any;
 
   constructor(private router: Router, private storageService: StorageService, private musicService: MusicService) {}
 
@@ -71,6 +72,7 @@ export class HomePage implements OnInit{
  /*    this.simularCargaDatos(); */
     this.loadTracks();
     this.loadAlbums();
+    this.getLocalArtists();
   }
 
   loadTracks() {
@@ -134,6 +136,11 @@ export class HomePage implements OnInit{
        reject("Hubo un error al obtener los datos")
       }, 1500)
     })
+  }
+
+  getLocalArtists() {
+    this.localArtists = this.musicService.getLocalArtists();
+   /*  console.log("Artistas",this.localArtists.artists) */
   }
 
   //Crear funcion para ir a ver la intro, se va a conectar con un boton
