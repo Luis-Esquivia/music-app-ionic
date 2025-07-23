@@ -57,6 +57,12 @@ export class HomePage implements OnInit{
   albums: any;
   localArtists: any;
   artists: any;
+  song: any = {
+    name: "",
+    preview_url: "",
+    playing: false
+  };
+  currenSong: any;
 
   constructor(private router: Router, private storageService: StorageService, private musicService: MusicService, private modalCtrl: ModalController) {}
 
@@ -156,6 +162,12 @@ export class HomePage implements OnInit{
         songs: songs
       }
     });
+    modal.onDidDismiss().then((result)=> {
+      if (result.data) {
+        console.log("Cancion recibida:", result.data)
+        this.song = result.data
+      }
+    })
     modal.present();
   }
 
@@ -176,6 +188,12 @@ export class HomePage implements OnInit{
         songs: songs
       }
     });
+    modal.onDidDismiss().then((result)=> {
+      if (result.data) {
+        console.log("Cancion recibida:", result.data)
+        this.song = result.data
+      }
+    })
     modal.present();
   }
 
