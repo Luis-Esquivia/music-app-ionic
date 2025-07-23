@@ -22,7 +22,25 @@ export class MusicService {
     );
   }
 
+  getArtists() {
+   return fetch(`${this.urlServer}/artists`).then(
+      response => response.json()
+    );
+  }
+
   getLocalArtists() {
     return daraArtists.artists;
+  }
+
+  getSongsByAlbum(albumId: string) {
+    return fetch(`${this.urlServer}/tracks/album/${albumId}`).then(
+      response => response.json()
+    );
+  }
+
+  getSongByArtists(artistId: string) {
+    return fetch(`${this.urlServer}/tracks/artist/${artistId}`).then(
+      response => response.json()
+    );
   }
 }

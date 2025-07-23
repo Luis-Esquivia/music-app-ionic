@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { StorageService } from '../service/storage.service';
 import { Router } from '@angular/router';
 import { MusicService } from '../service/music.service';
+import { SongsModalPage } from '../songs-modal/songs-modal.page';
 
 @Component({
   selector: 'app-home',
@@ -55,8 +56,9 @@ export class HomePage implements OnInit{
   tracks: any;
   albums: any;
   localArtists: any;
+  artists: any;
 
-  constructor(private router: Router, private storageService: StorageService, private musicService: MusicService) {}
+  constructor(private router: Router, private storageService: StorageService, private musicService: MusicService, private modalCtrl: ModalController) {}
 
   async ngOnInit() {
     /* const introVisto = await this.storageService.get('VioElIntro');
@@ -73,6 +75,7 @@ export class HomePage implements OnInit{
     this.loadTracks();
     this.loadAlbums();
     this.getLocalArtists();
+    this.loadArtist();
   }
 
   loadTracks() {
@@ -142,6 +145,44 @@ export class HomePage implements OnInit{
     this.localArtists = this.musicService.getLocalArtists();
    /*  console.log("Artistas",this.localArtists.artists) */
   }
+
+  async showSongs(albumId: string) {
+    console.log("album id:", albumId)
+    const songs = await this.musicService.getSongsByAlbum(albumId);
+    console.log("song :", songs)
+    const modal = await this.modalCtrl.create({
+      component: SongsModalPage,
+      componentProps: {
+        songs: songs
+      }
+    });
+    modal.present();
+  }
+
+  loadArtist() {
+    this.musicService.getArtists().then(artists => {
+      this.artists = artists;
+      console.log("Los aristas:" ,this.artists)
+    })
+  }
+
+  async showSongsByArtist(artistId: string) {
+    console.log("artista id", artistId)
+    const songs = await this.musicService.getSongByArtists(artistId);
+    console.log("songArtist", songs)
+    const modal = await this.modalCtrl.create({
+      component: SongsModalPage,
+      componentProps: {
+        songs: songs
+      }
+    });
+    modal.present();
+  }
+
+/*
+  async showArtists() {
+    const
+  } */
 
   //Crear funcion para ir a ver la intro, se va a conectar con un boton
   // que debemos agregar en el html y  al hacer click ejecute esat funcion para llevarme a ver la intro
