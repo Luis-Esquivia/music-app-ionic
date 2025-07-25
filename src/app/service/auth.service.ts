@@ -5,6 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
 
+  urlServer = "https://music.fly.dev";
+
   constructor() { }
 
   loginUser(credentials: any){
@@ -20,18 +22,19 @@ export class AuthService {
     })
   }
 
-  registerUser(user: any) {
-    return new Promise((accept, reject) => {
-      if (
-        user?.nombre?.trim() &&
-        user?.apellido?.trim() &&
-        user?.email?.trim() &&
-        user?.password?.trim()
-      ) {
-        accept("registro correcto");
-      } else {
-        reject("Todos los campos son requeridos.");
+
+  registerUser(data: any): Promise<any> {
+    return fetch(`${this.urlServer}/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then(response => {
+      if (!response.ok) {
+        return response.json().then(err => Promise.reject(err));
       }
+      return response.json();
     });
   }
 

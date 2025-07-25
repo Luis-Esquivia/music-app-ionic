@@ -89,7 +89,17 @@ export class RegisterPage implements OnInit {
   registerUser(user: any) {
     console.log('Datos del usuario:', user);
 
-    this.authService.registerUser(user).then(res => {
+    const formattedUser = {
+      user: {
+        email: user.email,
+        password: user.password,
+        password_confirmation: user.password,
+        name: user.nombre,
+        last_name: user.apellido
+      }
+    };
+
+    this.authService.registerUser(formattedUser).then(res => {
       this.errorMenssage = "";
       console.log(res);
 
@@ -108,10 +118,11 @@ export class RegisterPage implements OnInit {
       }
 
     }).catch(error => {
-      this.errorMenssage = error;
+      this.errorMenssage = error?.message || 'Ocurrió un error al registrar.';
       console.warn('Error de registro:', error);
     });
   }
+
 
   goLogin() {
     this.router.navigateByUrl("/login")
