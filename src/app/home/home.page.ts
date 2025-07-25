@@ -60,9 +60,11 @@ export class HomePage implements OnInit{
   song: any = {
     name: "",
     preview_url: "",
-    playing: false
+    playing: false,
+    liked: false
   };
-  currenSong: any;
+  currentSong: any;
+  newTime: any;
 
   constructor(private router: Router, private storageService: StorageService, private musicService: MusicService, private modalCtrl: ModalController) {}
 
@@ -197,10 +199,41 @@ export class HomePage implements OnInit{
     modal.present();
   }
 
-/*
-  async showArtists() {
-    const
-  } */
+  play() {
+    this.currentSong = new Audio(this.song.preview_url);
+    this.currentSong.play();
+    this.currentSong.addEventListener('timeupdate', () => {
+      this.newTime = (this.currentSong.currentTime * (this.currentSong.duration / 10)) / 100;
+    })
+    this.song.playing = true;
+  }
+
+  pause() {
+    this.currentSong.pause();
+    this.song.playing = false;
+  }
+
+  formatTime(seconds: number) {
+    if (!seconds || isNaN(seconds)) return "0:00";
+    const minutes = Math.floor(seconds/60);
+    const remainingSeconsds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconsds.toString().padStart(2, '0')}`
+  }
+
+  getRemainingTime() {
+    if (!this.currentSong?.duration || !this.currentSong?.currentTime) {
+      return 0;
+    }
+    return this.currentSong.duration - this.currentSong.currentTime;
+  }
+
+  toggleLike() {
+    if (this.song?.name) {
+      this.song.liked = !this.song.liked;
+    } else {
+      console.log("No hay canción seleccionada para dar like.");
+    }
+  }
 
   //Crear funcion para ir a ver la intro, se va a conectar con un boton
   // que debemos agregar en el html y  al hacer click ejecute esat funcion para llevarme a ver la intro
