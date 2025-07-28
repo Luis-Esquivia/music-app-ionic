@@ -7,14 +7,14 @@ import { StorageService } from '../service/storage.service';
 })
 
 export class loginGuard implements CanActivate {
-  constructor(private storageService: StorageService,private router: Router) {}
+  constructor(private storageService: StorageService, private router: Router) {}
 
   async canActivate(): Promise<boolean> {
-    const validateLogin = (await this.storageService.get('login')) === null ? false : true;
+    const validateLogin = await this.storageService.get('login');
     if (!validateLogin) {
-      this.router.navigate(['/login']);
+      await this.router.navigate(['/login']);
+      return false;
     }
-
-    return validateLogin
+    return true;
   }
-};
+}

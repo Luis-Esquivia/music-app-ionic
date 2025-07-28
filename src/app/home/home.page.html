@@ -8,32 +8,41 @@
 </ion-header>
 
 <ion-content>
-  <swiper-container
-    pagination="true"
-    loop="true"
-    slides-per-view="2">
 
+  <ion-text class="section-title">
+    <h3>Álbumes</h3>
+  </ion-text>
+  <swiper-container pagination="true" loop="true" slides-per-view="2">
     <swiper-slide *ngFor="let album of albums" (click)="showSongs(album.id)">
       <div class="slide-content">
         <img [src]="album.image">
         <p>{{ album.name }}</p>
       </div>
     </swiper-slide>
-
   </swiper-container>
 
-  <swiper-container
-    pagination="true"
-    loop="true"
-    slides-per-view="2">
-
+  <ion-text class="section-title">
+    <h3>Artistas</h3>
+  </ion-text>
+  <swiper-container pagination="true" loop="true" slides-per-view="2">
     <swiper-slide *ngFor="let artist of artists" (click)="showSongsByArtist(artist.id)">
       <div class="slide-content">
         <img [src]="artist.image">
         <p>{{ artist.name }}</p>
       </div>
     </swiper-slide>
+  </swiper-container>
 
+  <ion-text class="section-title">
+    <h3>Favoritos</h3>
+  </ion-text>
+  <swiper-container pagination="true" loop="true" slides-per-view="2">
+    <swiper-slide *ngFor="let fav of favorites" (click)="playFavorite(fav)">
+      <div class="slide-content">
+        <p>{{ fav.name }}</p>
+        <small>ID artista: {{ fav.artist_id }}</small>
+      </div>
+    </swiper-slide>
   </swiper-container>
 
 </ion-content>
@@ -64,10 +73,4 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-text color="danger" *ngIf="!song?.name">
-    <h2>Hola</h2>
-  </ion-text>
-  <ion-text color="primary" *ngIf="song?.name">
-    <h2>{{song.name}}</h2>
-  </ion-text>
 </ion-footer>

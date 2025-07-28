@@ -9,18 +9,21 @@ export class AuthService {
 
   constructor() { }
 
-  loginUser(credentials: any){
-    return new Promise((accept, reject) => {
-      if (
-        credentials.email == "luisdanielesq7@gmail.com" &&
-        credentials.password == "123456789"
-      ) {
-        accept("login correcto")
-      }else(
-        reject("login incorrecto")
-      )
-    })
+  loginUser(data: any): Promise<any> {
+    return fetch(`${this.urlServer}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user: data })
+    }).then(response => {
+      if (!response.ok) {
+        return response.json().then(err => Promise.reject(err));
+      }
+      return response.json();
+    });
   }
+
 
 
   registerUser(data: any): Promise<any> {

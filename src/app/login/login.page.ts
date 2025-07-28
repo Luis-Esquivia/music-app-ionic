@@ -21,67 +21,95 @@ import { Router } from '@angular/router';
   imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class LoginPage implements OnInit {
-
   bgColor = 'var(--bg-color)';
   borderRadius = 'var(--input-border-radius)';
   titleColor = 'var(--title-color)';
   loginForm: FormGroup;
-  errorMenssage: string = "";
+  errorMenssage: string = '';
   colorNegro = 'var(--color-negro)';
 
   validation_messages = {
     email: [
       {
-        type: "required", mensaje: "El email es obligatorio."
+        type: 'required',
+        mensaje: 'El email es obligatorio.',
       },
       {
-        type: "email", mensaje: "Email invalido."
-      }
+        type: 'email',
+        mensaje: 'Email invalido.',
+      },
     ],
     password: [
       {
-        type: "required", mensaje: "La contraseña es obligatoria."
+        type: 'required',
+        mensaje: 'La contraseña es obligatoria.',
       },
       {
-        type: "minLength", mensaje: "Contraseña invalida."
-      }
-    ]
-  }
+        type: 'minLength',
+        mensaje: 'Contraseña invalida.',
+      },
+    ],
+  };
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService) {
+  constructor(
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private navCtrl: NavController,
+    private storageService: StorageService
+  ) {
     this.loginForm = this.formBuilder.group({
       email: new FormControl(
-        '', Validators.compose([
-        Validators.required, //Campo obligatorio
-        Validators.email //Valida que sea correo electronico
-      ])
-    ),
-      password: new FormControl('', Validators.compose([
-        Validators.required,//Campo obligatorio
-        Validators.minLength(6)
-      ])
-    )
+        '',
+        Validators.compose([
+          Validators.required, //Campo obligatorio
+          Validators.email, //Valida que sea correo electronico
+        ])
+      ),
+      password: new FormControl(
+        '',
+        Validators.compose([
+          Validators.required, //Campo obligatorio
+          Validators.minLength(6),
+        ])
+      ),
     });
   }
 
   ngOnInit() {}
 
   loginUser(credentials: any) {
-    console.log(credentials);
-    this.authService.loginUser(credentials).then(res => {
-      this.errorMenssage = "";
-      try {
-        this.storageService.set('login', true);
-      } catch (error) {
-        console.error('Error guardando en el storage:', error);
-      }
-      this.navCtrl.navigateForward("/menu/home");
-    }).catch(error => {
-      this.errorMenssage = error;
-    });
+    console.log('Credenciales:', credentials);
+
+    this.authService
+      .loginUser(credentials)
+      .then(async (res) => {
+        this.errorMenssage = '';
+        console.log('Respuesta del backend:', res);
+
+        try {
+          await this.storageService.set('login', true);
+          await this.storageService.set('userData', res.user);
+
+          console.log('Antes de redirigir');
+          await this.router.navigateByUrl('/intro');
+          console.log('Después de redirigir');
+        } catch (error) {
+          console.error('Error guardando en el storage:', error);
+          this.errorMenssage = 'Error guardando sesión.';
+        }
+      })
+      .catch((error) => {
+        if (error?.errors && error.errors['email or password']) {
+          this.errorMenssage = 'Correo o contraseña inválidos.';
+        } else {
+          this.errorMenssage = error.msg || 'Error al iniciar sesión.';
+        }
+        console.warn('Error de login:', error);
+      });
   }
 
   goRegister() {
-    this.router.navigateByUrl("/register")
+    this.router.navigateByUrl('/register');
   }
 }

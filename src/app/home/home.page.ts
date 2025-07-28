@@ -14,7 +14,7 @@ import { SongsModalPage } from '../songs-modal/songs-modal.page';
   imports: [IonicModule, CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomePage implements OnInit{
+export class HomePage implements OnInit {
   temaOscuro = true;
 
   colorFondo = 'var(--color-dark-bg-ioncontent)';
@@ -22,7 +22,7 @@ export class HomePage implements OnInit{
   colorTitulo = 'var(--color-dark-title-card)';
   colorCard = 'var(--color-oscuro)';
   colorOscuro = 'var(--color-dark-title-card)';
-  colorClaro = 'var(--color-dark-bg-ioncontent)'
+  colorClaro = 'var(--color-dark-bg-ioncontent)';
   colorVerde = 'var(--color-dark-title-card)';
 
   colorActual = this.colorOscuro;
@@ -58,15 +58,23 @@ export class HomePage implements OnInit{
   localArtists: any;
   artists: any;
   song: any = {
-    name: "",
-    preview_url: "",
+    name: '',
+    id: '',
+    preview_url: '',
     playing: false,
-    liked: false
+    liked: false,
+    favoriteId: null,
   };
   currentSong: any;
   newTime: any;
+  favorites: any[] = [];
 
-  constructor(private router: Router, private storageService: StorageService, private musicService: MusicService, private modalCtrl: ModalController) {}
+  constructor(
+    private router: Router,
+    private storageService: StorageService,
+    private musicService: MusicService,
+    private modalCtrl: ModalController
+  ) {}
 
   async ngOnInit() {
     /* const introVisto = await this.storageService.get('VioElIntro');
@@ -75,36 +83,41 @@ export class HomePage implements OnInit{
       return;
     } */
 
-      const validateIntro = (await this.storageService.get('validateIntro')) === null ? false : true;
-      console.log("ya entre al intro ? ",validateIntro)
+    const validateIntro =
+      (await this.storageService.get('validateIntro')) === null ? false : true;
+    console.log('ya entre al intro ? ', validateIntro);
 
     await this.loadStorageData();
- /*    this.simularCargaDatos(); */
+    /*    this.simularCargaDatos(); */
     this.loadTracks();
     this.loadAlbums();
     this.getLocalArtists();
     this.loadArtist();
+    await this.loadFavorites();
   }
 
   loadTracks() {
-    this.musicService.getTracks().then(tracks => {
+    this.musicService.getTracks().then((tracks) => {
       this.tracks = tracks;
-      console.log(this.tracks, "Las Canciones")
-    })
+      console.log(this.tracks, 'Las Canciones');
+    });
   }
 
   loadAlbums() {
-    this.musicService.getAlbums().then(albums => {
+    this.musicService.getAlbums().then((albums) => {
       this.albums = albums;
-      console.log(this.albums, "Las Albums")
-    })
+      console.log(this.albums, 'Las Albums');
+    });
   }
 
-  async cambiarColorDos () {
-    this.colorActual = this.colorActual === this.colorOscuro ? this.colorClaro : this.colorOscuro;
-    console.log(this.colorActual)
-    await this.storageService.set('theme', this.colorActual)
-    console.log('Tema Guardado: ', this.colorActual)
+  async cambiarColorDos() {
+    this.colorActual =
+      this.colorActual === this.colorOscuro
+        ? this.colorClaro
+        : this.colorOscuro;
+    console.log(this.colorActual);
+    await this.storageService.set('theme', this.colorActual);
+    console.log('Tema Guardado: ', this.colorActual);
   }
 
   cambiarColor() {
@@ -131,71 +144,96 @@ export class HomePage implements OnInit{
     const saveTheme = await this.storageService.get('theme');
     if (saveTheme) {
       this.colorActual = saveTheme;
-      console.log('color: ', this.colorActual)
+      console.log('color: ', this.colorActual);
     }
   }
 
   async simularCargaDatos() {
     const data = await this.obtenerDatosSimulados();
-    console.log('Datos simulados: ', data)
+    console.log('Datos simulados: ', data);
   }
 
   obtenerDatosSimulados() {
     return new Promise((resolver, reject) => {
       setTimeout(() => {
-       // resolver(['Rock', 'Poop', 'Jazz'])
-       reject("Hubo un error al obtener los datos")
-      }, 1500)
-    })
+        // resolver(['Rock', 'Poop', 'Jazz'])
+        reject('Hubo un error al obtener los datos');
+      }, 1500);
+    });
   }
 
   getLocalArtists() {
     this.localArtists = this.musicService.getLocalArtists();
-   /*  console.log("Artistas",this.localArtists.artists) */
+    /*  console.log("Artistas",this.localArtists.artists) */
   }
 
   async showSongs(albumId: string) {
-    console.log("album id:", albumId)
+    console.log('album id:', albumId);
     const songs = await this.musicService.getSongsByAlbum(albumId);
-    console.log("song :", songs)
+    console.log('song :', songs);
     const modal = await this.modalCtrl.create({
       component: SongsModalPage,
       componentProps: {
-        songs: songs
+        songs: songs,
+      },
+    });
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        console.log('Cancion recibida:', result.data);
+        this.song = result.data;
       }
     });
-    modal.onDidDismiss().then((result)=> {
-      if (result.data) {
-        console.log("Cancion recibida:", result.data)
-        this.song = result.data
-      }
-    })
     modal.present();
   }
 
   loadArtist() {
-    this.musicService.getArtists().then(artists => {
+    this.musicService.getArtists().then((artists) => {
       this.artists = artists;
-      console.log("Los aristas:" ,this.artists)
-    })
+      console.log('Los aristas:', this.artists);
+    });
   }
 
+  async loadFavorites() {
+  try {
+    const user = await this.storageService.get('userData');
+    const userId = user?.id;
+
+    if (!userId) {
+      console.warn('No se encontró el ID del usuario.');
+      return;
+    }
+
+    const favorites = await this.musicService.getFavoritesByUser(userId);
+    this.favorites = favorites;
+    console.log('Favoritos cargados:', this.favorites);
+
+    if (this.song?.liked && !this.favorites.some(f => f.id === this.song.id)) {
+      this.song.liked = false;
+      this.song.favoriteId = null;
+    }
+
+  } catch (error) {
+    console.error('Error cargando favoritos:', error);
+  }
+}
+
+
   async showSongsByArtist(artistId: string) {
-    console.log("artista id", artistId)
+    console.log('artista id', artistId);
     const songs = await this.musicService.getSongByArtists(artistId);
-    console.log("songArtist", songs)
+    console.log('songArtist', songs);
     const modal = await this.modalCtrl.create({
       component: SongsModalPage,
       componentProps: {
-        songs: songs
+        songs: songs,
+      },
+    });
+    modal.onDidDismiss().then((result) => {
+      if (result.data) {
+        console.log('Cancion recibida:', result.data);
+        this.song = result.data;
       }
     });
-    modal.onDidDismiss().then((result)=> {
-      if (result.data) {
-        console.log("Cancion recibida:", result.data)
-        this.song = result.data
-      }
-    })
     modal.present();
   }
 
@@ -203,8 +241,9 @@ export class HomePage implements OnInit{
     this.currentSong = new Audio(this.song.preview_url);
     this.currentSong.play();
     this.currentSong.addEventListener('timeupdate', () => {
-      this.newTime = (this.currentSong.currentTime * (this.currentSong.duration / 10)) / 100;
-    })
+      this.newTime =
+        (this.currentSong.currentTime * (this.currentSong.duration / 10)) / 100;
+    });
     this.song.playing = true;
   }
 
@@ -214,10 +253,10 @@ export class HomePage implements OnInit{
   }
 
   formatTime(seconds: number) {
-    if (!seconds || isNaN(seconds)) return "0:00";
-    const minutes = Math.floor(seconds/60);
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const minutes = Math.floor(seconds / 60);
     const remainingSeconsds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconsds.toString().padStart(2, '0')}`
+    return `${minutes}:${remainingSeconsds.toString().padStart(2, '0')}`;
   }
 
   getRemainingTime() {
@@ -228,11 +267,67 @@ export class HomePage implements OnInit{
   }
 
   toggleLike() {
-    if (this.song?.name) {
-      this.song.liked = !this.song.liked;
-    } else {
-      console.log("No hay canción seleccionada para dar like.");
+  if (!this.song?.name || !this.song?.id) {
+    console.log('No hay canción seleccionada o no tiene ID.');
+    return;
+  }
+
+  this.storageService.get('userData').then((userData) => {
+    if (!userData?.id) {
+      console.warn('No se encontró el ID del usuario.');
+      return;
     }
+
+    if (!this.song.liked) {
+      const payload = {
+        favorite_track: {
+          user_id: userData.id,
+          track_id: this.song.id,
+        },
+      };
+
+      this.musicService
+        .giveLike(payload)
+        .then((res) => {
+          console.log('Respuesta al dar like:', res);
+          this.song.liked = true;
+          this.song.favoriteId = res.id;
+
+          this.loadFavorites();
+        })
+        .catch((err) => {
+          console.error('Error al dar like:', err);
+        });
+    } else {
+      if (!this.song.favoriteId) {
+        console.warn('No se encontró el ID del favorito para eliminar.');
+        return;
+      }
+
+      this.musicService
+        .removeLike(this.song.favoriteId)
+        .then(() => {
+          console.log('Canción removida de favoritos');
+          this.song.liked = false;
+          this.song.favoriteId = null;
+
+          this.loadFavorites();
+        })
+        .catch((err) => {
+          console.error('Error al quitar el like:', err);
+        });
+    }
+  });
+}
+
+
+  playFavorite(fav: any) {
+    this.song = {
+      ...fav,
+      playing: false,
+      liked: true,
+    };
+    this.play();
   }
 
   //Crear funcion para ir a ver la intro, se va a conectar con un boton
